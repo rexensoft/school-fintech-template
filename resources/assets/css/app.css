@@ -1,0 +1,54 @@
+:root {
+  --bs-blue           : #0d6efd;
+  --bs-indigo         : #6610f2;
+  --bs-purple         : #6f42c1;
+  --bs-pink           : #d63384;
+  --bs-red            : #dc3545;
+  --bs-orange         : #fd7e14;
+  --bs-yellow         : #ffc107;
+  --bs-green          : #198754;
+  --bs-teal           : #20c997;
+  --bs-cyan           : #0dcaf0;
+  --bs-white          : #fff;
+  --bs-gray           : #6c757d;
+  --bs-gray-light     : #dee2e6;
+  --bs-gray-dark      : #343a40;
+
+  --bs-primary        : #3368da;
+  --bs-primary-dark   : #2d1344;
+  --bs-secondary      : #6c757d;
+  --bs-secondary-dark : #60616f;
+  --bs-success        : #198754;
+  --bs-success-dark   : #13855c;
+  --bs-info           : #0dcaf0;
+  --bs-info-dark      : #258391;
+  --bs-warning        : #ffc107;
+  --bs-warning-dark   : #dda20a;
+  --bs-danger         : #dc3545;
+  --bs-danger-dark    : #be2617;
+  --bs-light          : #f7fafc;
+  --bs-light-dark     : #c2cbe5;
+  --bs-dark           : #212529;
+
+  --bs-font-sans-serif: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  --bs-font-monospace : SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --bs-gradient       : linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+
+.bg-login-image {
+  background: url("https://source.unsplash.com/K4mSJ7kc0As/600x800");
+  background-position: center;
+  background-size: cover;
+}
+  
+.bg-register-image {
+  background: url("https://source.unsplash.com/Mv9hjnEUHR4/600x800");
+  background-position: center;
+  background-size: cover;
+}
+  
+.bg-password-image {
+  background: url("https://source.unsplash.com/oWTW-jNGl9I/600x800");
+  background-position: center;
+  background-size: cover;
+}
