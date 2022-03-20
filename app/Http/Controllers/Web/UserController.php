@@ -3,43 +3,28 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\{Role, User};
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
     public function index(Request $request) {
-        $search = $request->search; 
-        $users  = User::latest();
-
-        if($search) $users = $users->search($search);
-
-        $users  = $users->paginate(10);
+        $roles  = Role::orderByDesc('id')->get();
+        $users  = User::fastPaginate($request);
         
-        return view('pages.admin.users.index', compact('users'));
+        return view('pages.admin.users.index', compact('users', 'roles'));
     }
 
 
     public function store(Request $request) {
         try{
-            $this->validate($request, [
-                'name'  => 'required|min:2|max:50',
-                'email' => 'required|email|unique:users',
-            ]);
-
-            User::create([
-                'name'      => $request->name,
-                'email'     => $request->email,
-                'password'  => Hash::make('password'),
-            ]);
-
+            User::fastCreate($request);
             Alert::success('Success', 'User added successfully');
+            return back();
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
-        }finally {
             return back();
         }
     }
@@ -47,24 +32,11 @@ class UserController extends Controller
 
     public function update(Request $request, $userId) {
         try{
-            $this->validate($request, [
-                'name'  => 'nullable|min:2|max:50',
-                'email' => "nullable|email|unique:users,email,$userId",
-            ]);
-
-            $user = User::find($userId);
-
-            if(!$user) throw new Exception('User not found');
-
-            $user->update([
-                'name'  => $request->name ?? $user->name,
-                'email' => $request->email ?? $user->email,
-            ]);
-
+            User::fastUpdate($request, $userId);
             Alert::success('Success', 'User updated successfully');
+            return back();
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
-        }finally {
             return back();
         }
     }
@@ -72,16 +44,11 @@ class UserController extends Controller
 
     public function destroy($userId) {
         try{
-            $user = User::find($userId);
-
-            if(!$user) throw new Exception('User not found');
-
-            $user->delete();
-
+            User::fastDelete($userId);
             Alert::success('Success', 'User deleted successfully');
+            return back();
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
-        }finally {
             return back();
         }
     }

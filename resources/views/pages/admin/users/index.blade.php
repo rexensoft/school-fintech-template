@@ -9,13 +9,21 @@
                 <x-button outline type="submit" value="Search" />
             </x-form>
         </x-card.head>
-        <x-card.body class="table-responsive">
+        <x-card.body class="table-responsive" style="min-height: 400px">
             
             <!-- MODAL ADD USER -->
             <x-modal id="modalAddUser" title="Add User" :action="route('users.store')">
                 <x-modal.body>
                     <x-input type="text" name="name" label="Name:" class="mb-3" />
-                    <x-input type="text" name="email" label="Email:" class="mb-3" />
+                    <x-input type="email" name="email" label="Email:" class="mb-3" />
+                    <x-input.label value="Role:" />
+                    <select name="role_id" class="form-control form-select mb-3">
+
+                        @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
+                        @endforeach
+
+                      </select>
                     <x-input value="password" label="Default Password:" class="mb-3" readonly />
                 </x-modal.body>
             </x-modal>
@@ -25,15 +33,24 @@
                 <x-modal.body>
                     <x-input type="text" name="name" label="Name:" class="mb-3" />
                     <x-input type="text" name="email" label="Email:" class="mb-3" />
+                    <x-input.label value="Role:" />
+                    <select name="role_id" class="form-control form-select mb-3">
+
+                        @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
+                        @endforeach
+
+                      </select>
                 </x-modal.body>
             </x-modal>
 
-            <table class="table table-hover" style="min-height: 400px">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -50,6 +67,7 @@
                         <td class="align-middle">{{ $number }}</td>
                         <td class="align-middle">{{ $user->name }}</td>
                         <td class="align-middle">{{ $user->email }}</td>
+                        <td class="align-middle">{{ ucfirst($user->role->name) }}</td>
                         <td class="align-middle">
                             <x-view>
                                 <x-button color="danger" :action="route('users.destroy', [$user->id])" method="DELETE">

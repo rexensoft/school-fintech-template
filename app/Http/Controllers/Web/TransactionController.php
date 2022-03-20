@@ -11,38 +11,51 @@ use RealRashid\SweetAlert\Facades\Alert;
 class TransactionController extends Controller
 {
     public function index(Request $request) {
-        $type         = $request->type;
-        $search       = $request->search;
-        $transactions = Transaction::latest();
+        $role = auth()->user()->role_id;
+        $trxs = new Transaction();
 
-        if($type)
-            $transactions = $transactions->where('type', $type);
-        if($search)
-            $transactions = $transactions->search($search);
+        if($role === 2) $trxs = Transaction::where('type', 2); // Buying
+        if($role === 3) $trxs = Transaction::where('type', 1); // Topup
+        if($role === 4) $trxs = Transaction::where('sender_id', auth()->id())
+            ->orWhere('receiver_id', auth()->id());
 
-        $transactions = $transactions->paginate(10);
+        $trxs = $trxs->fastPaginate($request);
 
-        return view('pages.admin.transaction.index', compact('transactions'));
+        return view('pages.all.transactions.index', ['transactions' => $trxs]);
     }
 
 
     public function topup(Request $request) {
         try{
-            $this->validate($request, [
-                'amount'    => 'required|numeric|digits_between:1,18',
-            ]);
-
-            Transaction::create([
-                'receiver_id'   => auth()->id(),
-                'amount'        => $request->amount,
-                'type'          => 1,
-                'status'        => 1,
-            ]);
-
+            Transaction::fastTopup($request);
             Alert::success('Success', 'Topup created successfully');
+            return back();
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
-        }finally {
+            return back();
+        }
+    }
+    
+    
+    public function approve($transactionId) {
+        try{
+            Transaction::fastApprove($transactionId);
+            Alert::success('Success', 'Topup approved successfully');
+            return back();
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
+            return back();
+        }
+    }
+    
+    
+    public function reject($transactionId) {
+        try{
+            Transaction::fastReject($transactionId);
+            Alert::success('Success', 'Topup rejected successfully');
+            return back();
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
             return back();
         }
     }

@@ -10,12 +10,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            RoleSeeder::class,
             UserSeeder::class,
+            ItemSeeder::class,
         ]);
 
         User::factory(20)
-            ->hasSendTransactions(1)
-            ->hasReceiveTransactions(1)
-            ->create();
+            ->create(['role_id' => 4]);
     }
 }

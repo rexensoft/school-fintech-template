@@ -10,7 +10,7 @@
 
 ## About
 
-sb admin 2 component is based on the free version of sb admin 2 template, now we convert the template into laravel and make it a component!
+School Fintech Template is based on the [SB Admin 2 Laravel Component](https://github.com/rexencorp/sb-admin-2-component) template.
 
 ## How To Install
 - Open your terminal
@@ -33,7 +33,45 @@ sb admin 2 component is based on the free version of sb admin 2 template, now we
 ## Demo Account
 | Email | Password |
 | :---  |   :---   |
-| user@example.com | password |
+| admin@example.com | password |
+| seller@example.com | password |
+| teller@example.com | password |
+| student@example.com | password |
+
+## Model Fast Methods
+Fast Methods makes it easy for you to manipulate databases through models
+- **[User](#user-fast-methods)**
+  -  [Fast Create](#user-fast-method-create)
+  -  [Fast Update](#user-fast-method-update)
+  -  [Fast Delete](#user-fast-method-delete)
+- **[Transaction](#fast-method-transaction)**
+  -  [Fast Topup](#user-fast-method-topup)
+  -  [Fast Approve](#user-fast-method-approve)
+  -  [Fast Reject](#user-fast-method-reject)
+
+## User Fast Methods
+
+<div id="user-fast-method-create"></div>
+
+- ### Fast Create
+  Syntax:
+  ```
+    User::fastCreate($data [, $password]);
+  ```
+  
+  Example:
+  ```
+    public function store(Request $request) {
+        User::fastCreate($request);
+    }
+  ```
+
+    Parameters:
+
+    `$data` Data for create user \
+    `$password` **_(optional)_** Only string type allowed
+
+  
 
 ## License
 

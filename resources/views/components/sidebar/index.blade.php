@@ -1,36 +1,24 @@
-@php
-    $transactionNav = [
-        'Topup'   => url('/transactions') . '?type=1', 
-        'Buying'  => url('/transactions') . '?type=2',
-        'Refund'  => url('/transactions') . '?type=3',
-    ];
-@endphp
+@php $role = auth()->user()->role_id; @endphp
 
 <x-sidebar.sidebar theme="dark">
     <x-sidebar.brand 
-      img="{{ asset('assets/img/brand.png') }}"
-      name="REXENSOFT"
-      route="/dashboard" />
+        img="{{ asset('assets/img/brand.png') }}"
+        name="REXENSOFT"
+        route="/dashboard" />
   
     <x-sidebar.divider />
   
     <x-sidebar.item
-      active="{{ Request::is('dashboard') }}"
-      icon="fa-gauge-high"
-      name="Dashboard" 
-      :route="url('/dashboard')" />
-  
-    <x-sidebar.collapse-item
-      active="{{ Request::is('coins') }}"
-      icon="fa-clipboard-list"
-      name="Transactions"
-      :routes="$transactionNav" />  
-    
-    <x-sidebar.item
-      active="{{ Request::is('users') }}"
-      icon="fa-users"
-      name="Users"
-      :route="url('/users')" />  
+        active="{{ Request::is('dashboard') }}"
+        icon="fa-gauge-high"
+        name="Dashboard" 
+        :route="url('/dashboard')" />
+
+    @if($role === 1) <x-sidebar.role.admin />
+    @elseif($role === 2) <x-sidebar.role.seller />
+    @elseif($role === 3) <x-sidebar.role.teller />
+    @elseif($role === 4) <x-sidebar.role.student />
+    @endif
   
     <x-sidebar.divider mb="4"/>
     
