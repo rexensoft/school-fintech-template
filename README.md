@@ -21,7 +21,7 @@ sb admin 2 component is based on the free version of sb admin 2 template, now we
 - After that, type `npm install` in terminal 
 
 ## How to Run
-- Create a database with the name `sb_admin2_component` (you can change the database name)
+- Create a database with the name `school-fintech-template` (you can change the database name)
 - Type `cp .env.example .env` in terminal OR `copy .env.example .env` in cmd
 - Adjust the `DB_DATABASE` in `.env` file according the database you created 
 - Type `php artisan key:generate` in terminal
