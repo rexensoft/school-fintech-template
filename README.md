@@ -5,7 +5,7 @@
     <a href="https://getbootstrap.com/docs/5.0x"><img src="https://img.shields.io/badge/v5.0-Bootstrap-7952b3" alt="Bootstrap"></a>
     <a href="https://fontawesome.com/icons"><img src="https://img.shields.io/badge/v6.0-Font%20Awesome-146EBE" alt="Bootstrap"></a>
 </p>
-<h1 align="center"><b>SB Admin 2 Laravel Component</b></h1>
+<h1 align="center"><b>School Fintech Template</b></h1>
 
 
 ## About
