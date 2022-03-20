@@ -5,7 +5,7 @@
     <a href="https://getbootstrap.com/docs/5.0x"><img src="https://img.shields.io/badge/v5.0-Bootstrap-7952b3" alt="Bootstrap"></a>
     <a href="https://fontawesome.com/icons"><img src="https://img.shields.io/badge/v6.0-Font%20Awesome-146EBE" alt="Bootstrap"></a>
 </p>
-<h1 align="center"><b>SB Admin 2 Laravel Component</b></h1>
+<h1 align="center"><b>School Fintech Template</b></h1>
 
 
 ## About
@@ -15,13 +15,13 @@ sb admin 2 component is based on the free version of sb admin 2 template, now we
 ## How To Install
 - Open your terminal
 - Change directory you want
-- Type `git clone --branch main https://github.com/rexencorp/sb-admin-2-component` in terminal
-- After that, type `cd sb-admin-2-component` to enter the `sb-admin-2-component` directory
+- Type `git clone --branch main https://github.com/rexencorp/school-fintech-template` in terminal
+- After that, type `cd school-fintech-template` to enter the `school-fintech-template` directory
 - Type `composer install` in terminal
 - After that, type `npm install` in terminal 
 
 ## How to Run
-- Create a database with the name `sb_admin2_component` (you can change the database name)
+- Create a database with the name `school-fintech-template` (you can change the database name)
 - Type `cp .env.example .env` in terminal OR `copy .env.example .env` in cmd
 - Adjust the `DB_DATABASE` in `.env` file according the database you created 
 - Type `php artisan key:generate` in terminal
@@ -37,4 +37,4 @@ sb admin 2 component is based on the free version of sb admin 2 template, now we
 
 ## License
 
-The SB Admin 2 Laravel Component is open-sourced template licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The School Fintech Template is open-sourced template licensed under the [MIT license](https://opensource.org/licenses/MIT).
