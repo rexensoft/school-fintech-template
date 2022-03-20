@@ -15,8 +15,8 @@ sb admin 2 component is based on the free version of sb admin 2 template, now we
 ## How To Install
 - Open your terminal
 - Change directory you want
-- Type `git clone --branch main https://github.com/rexencorp/sb-admin-2-component` in terminal
-- After that, type `cd sb-admin-2-component` to enter the `sb-admin-2-component` directory
+- Type `git clone --branch main https://github.com/rexencorp/school-fintech-template` in terminal
+- After that, type `cd school-fintech-template` to enter the `school-fintech-template` directory
 - Type `composer install` in terminal
 - After that, type `npm install` in terminal 
 
