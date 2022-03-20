@@ -37,4 +37,4 @@ sb admin 2 component is based on the free version of sb admin 2 template, now we
 
 ## License
 
-The SB Admin 2 Laravel Component is open-sourced template licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The School Fintech Template is open-sourced template licensed under the [MIT license](https://opensource.org/licenses/MIT).
