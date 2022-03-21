@@ -26,7 +26,6 @@ Route::middleware('auth')->group(function() {
     Route::middleware(['admin'])->group(function() {
         // USER
         Route::prefix('/users')->name('users.')->group(function() {
-            Route::get('/', [UserController::class, 'index'])->name('index');
             Route::post('/', [UserController::class, 'store'])->name('store');
             Route::put('/{userId}', [UserController::class, 'update'])->name('update');
             Route::delete('/{userId}', [UserController::class, 'destroy'])->name('destroy');
@@ -38,6 +37,7 @@ Route::middleware('auth')->group(function() {
         SELLER ONLY
     */
     Route::middleware(['seller'])->group(function() {
+        // ITEM
         Route::prefix('/items')->name('items.')->group(function() {
             Route::get('/', [ItemController::class, 'index'])->name('index');
             Route::post('/', [ItemController::class, 'store'])->name('store');
@@ -62,9 +62,20 @@ Route::middleware('auth')->group(function() {
 
 
     /*
-        STUDENT ONLY
+        ADMIN, STUDENT, TELLER ONLY
     */
-    Route::middleware(['student'])->group(function() {
+    Route::middleware(['admin.teller'])->group(function() {
+        // USER
+        Route::prefix('/users')->name('users.')->group(function() {
+            Route::get('/', [UserController::class, 'index'])->name('index');
+         });
+    });
+
+
+    /*
+        ADMIN, STUDENT, TELLER ONLY
+    */
+    Route::middleware(['admin.student.teller'])->group(function() {
         // TRANSACTION
         Route::prefix('/transactions')->name('transactions.')->group(function() {
             Route::post('/topup', [TransactionController::class, 'topup'])->name('topup');

@@ -48,6 +48,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
@@ -65,6 +66,7 @@
 
                     <tr>
                         <td class="align-middle">{{ $number }}</td>
+                        <td class="align-middle">{{ $user->id }}</td>
                         <td class="align-middle">{{ $user->name }}</td>
                         <td class="align-middle">{{ $user->email }}</td>
                         <td class="align-middle">{{ ucfirst($user->role->name) }}</td>

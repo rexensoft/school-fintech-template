@@ -3,12 +3,21 @@
     <x-card class="mb-4">
         <x-card.head>
             <x-text bold color="primary" value="Transactions" />
+            <x-button.modal class="ms-3" target="modalTopup" value="Topup"/>
             <x-form method="GET" class="ms-auto d-none d-md-flex">
                 <x-input name="search" placeholder="Search..." value="{{ request()->search ?? '' }}" class="me-2"/>
                 <x-button outline type="submit" value="Search" />
             </x-form>
         </x-card.head>
         <x-card.body class="table-responsive" style="min-height: 400px">
+
+             <!-- MODAL TOPUP -->
+             <x-modal id="modalTopup" title="Topup" :action="route('transactions.topup')">
+                <x-modal.body>
+                    <x-input type="number" name="user_id" label="User ID:" class="mb-3" />
+                    <x-input type="number" name="amount" label="Amount:" class="mb-3" />
+                </x-modal.body>
+            </x-modal>
 
             <table class="table table-hover">
                 <thead>

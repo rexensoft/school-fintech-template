@@ -11,10 +11,14 @@ use RealRashid\SweetAlert\Facades\Alert;
 class UserController extends Controller
 {
     public function index(Request $request) {
+        $role   = auth()->user()->role_id;
         $roles  = Role::orderByDesc('id')->get();
         $users  = User::fastPaginate($request);
         
-        return view('pages.admin.users.index', compact('users', 'roles'));
+        if($role === 1)
+            return view('pages.admin.users.index', compact('users', 'roles'));
+        if($role === 3)
+            return view('pages.teller.users.index', compact('users'));
     }
 
 

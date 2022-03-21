@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -27,7 +28,7 @@ class TransactionController extends Controller
 
     public function topup(Request $request) {
         try{
-            Transaction::fastTopup($request);
+            Transaction::fastTopup($request, $request->user_id);
             Alert::success('Success', 'Topup created successfully');
             return back();
         }catch(Exception $err) {

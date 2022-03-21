@@ -17,8 +17,9 @@ class UserSeeder extends Seeder
             ['Student', 'student@example.com', 4],
         ];
 
-        foreach($users as $user) {
+        foreach($users as $key => $user) {
             User::create([
+                'id'        => 100000 + $key,
                 'name'      => $user[0],
                 'email'     => $user[1],
                 'role_id'   => $user[2],
