@@ -68,6 +68,7 @@ class User extends Authenticatable
 
 
     public function scopeFastCreate($query, $data, string $password='password') {
+        $data      = (object) $data;
         $validator = Validator::make($data->all() ?? $data, [
             'name'      => 'required|min:2|max:50',
             'email'     => 'required|email|unique:users',
