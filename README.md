@@ -56,7 +56,6 @@ Fast Methods makes it easy for you to manipulate databases through models
   -  [Fast Update](#item-fast-method-update)
 
 ## User Fast Methods
-***
 
 <div id="user-fast-method-create"></div>
 
@@ -150,7 +149,6 @@ Fast Methods makes it easy for you to manipulate databases through models
     &nbsp;
 
 ## Transaction Fast Methods
-***
 
 <div id="transaction-fast-method-approve"></div>
 

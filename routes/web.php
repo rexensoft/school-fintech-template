@@ -44,6 +44,14 @@ Route::middleware('auth')->group(function() {
             Route::put('/{itemId}', [ItemController::class, 'update'])->name('update');
             Route::delete('/{itemId}', [ItemController::class, 'destroy'])->name('destroy');
         });
+
+        // TRANSACTION
+        Route::prefix('/transactions')->name('transactions.')->group(function() {
+            Route::prefix('/{transactionId}')->group(function() {
+                Route::get('/approve-buy', [TransactionController::class, 'approveBuy'])->name('approveBuy');
+                Route::get('/reject-buy', [TransactionController::class, 'rejectBuy'])->name('rejectBuy');
+            });
+        });
     });
 
 
@@ -68,6 +76,7 @@ Route::middleware('auth')->group(function() {
         // TRANSACTION
         Route::prefix('/stores')->name('stores.')->group(function() {
             Route::get('/', [ItemController::class, 'index'])->name('index');
+            Route::post('/{item:id}/buy', [TransactionController::class, 'buy'])->name('buy');
         });
     });
 

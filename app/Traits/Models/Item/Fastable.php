@@ -11,15 +11,15 @@ trait Fastable{
     public function scopeFastPaginate($query, $data=[]) {
         $data   = (object) $data;
         $search = $data->search ?? null; 
-        $users  = $query->latest();
+        $items  = $query->latest();
 
-        if($search) $users = $users->search($search);
+        if($search) $items = $items->search($search);
 
-        $users = $users
+        $items = $items
             ->paginate(10)
             ->withQueryString();
         
-        return $users;
+        return $items;
     }
     
 

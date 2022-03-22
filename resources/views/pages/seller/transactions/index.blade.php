@@ -14,7 +14,9 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Receiver</th>
+                        <th>Code</th>
+                        <th>Buyer</th>
+                        <th>Item</th>
                         <th>Amount</th>
                         <th>Status</th>
                         <th>Requested</th>
@@ -34,10 +36,12 @@
 
                     <tr>
                         <td class="align-middle">{{ $number }}</td>
+                        <td class="align-middle">{{ $transaction->code }}</td>
                         <td class="align-middle">
                             <h6 class="fw-bold m-0">{{ $transaction->receiver->name }}</h6>
                             <small>{{ $transaction->receiver->email }}</small>
                         </td>
+                        <td class="align-middle">{{ $transaction->items->first()->name ?? 'Unknown' }}</td>
                         <td class="align-middle">{{ $transaction->amount }}</td>
                         <td class="align-middle">{{ $transaction->status_name }}</td>
                         <td class="align-middle">
@@ -46,10 +50,10 @@
                         </small>
                         <td class="align-middle">
                             <x-view>
-                                <x-button color="success" :action="route('transactions.approve', [$transaction->id])" method="GET" class="{{ $isDisabled }}">
+                                <x-button color="success" :action="route('transactions.approveBuy', [$transaction->id])" method="GET" class="{{ $isDisabled }}">
                                     <i class="fas fa-check"></i>
                                 </x-button>
-                                <x-button color="danger" :action="route('transactions.reject', [$transaction->id])" method="GET" class="ms-1 {{ $isDisabled }}">
+                                <x-button color="danger" :action="route('transactions.rejectBuy', [$transaction->id])" method="GET" class="ms-1 {{ $isDisabled }}">
                                     <i class="fas fa-ban"></i>
                                 </x-button>
                             </x-view>

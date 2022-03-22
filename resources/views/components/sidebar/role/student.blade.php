@@ -19,8 +19,8 @@
     name="Store"
     :route="url('/stores')" />
 
-<x-sidebar.item
+{{-- <x-sidebar.item
     active="{{ Request::is('carts') }}"
     icon="fa-cart-shopping"
     name="Carts"
-    :route="url('/carts')" />
+    :route="url('/carts')" /> --}}

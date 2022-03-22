@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Exports\TransactionExport;
 use App\Http\Controllers\Controller;
+use App\Models\Item;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
@@ -65,6 +66,42 @@ class TransactionController extends Controller
     public function export() {
         try{
             return Excel::download(new TransactionExport, 'transactions.xlsx');
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
+            return back();
+        }
+    }
+
+    
+    public function buy(Request $request, Item $item) {
+        try{
+            Transaction::fastBuy($item);
+            Alert::success('Success', 'Buying successfully');
+            return back();
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
+            return back();
+        }
+    }
+
+
+    public function approveBuy($transactionId) {
+        try{
+            Transaction::fastApproveBuy($transactionId);
+            Alert::success('Success', 'Transaction approved successfully');
+            return back();
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
+            return back();
+        }
+    }
+    
+    
+    public function rejectBuy($transactionId) {
+        try{
+            Transaction::fastRejectBuy($transactionId);
+            Alert::success('Success', 'Transaction rejected successfully');
+            return back();
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
             return back();

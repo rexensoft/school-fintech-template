@@ -18,7 +18,7 @@
                         <th>Stock</th>
                         <th>Price</th>
                         <th>Desc</th>
-                        {{-- <th>Action</th> --}}
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,13 +41,13 @@
                                 readonly
                                 >{{ $item->desc }}</textarea>
                         </td>
-                        {{-- <td class="align-middle">
+                        <td class="align-middle">
                             <x-view>
-                                <x-button color="success" :action="url('/cart')">
-                                    <i class="fas fa-cart-arrow-down"></i>
+                                <x-button color="success" :action="route('stores.buy', [$item->id])">
+                                    <i class="fas fa-shopping-cart"></i> Buy
                                 </x-button>
                             </x-view>
-                        </td> --}}
+                        </td>
                     </tr>
                     @endforeach
 
