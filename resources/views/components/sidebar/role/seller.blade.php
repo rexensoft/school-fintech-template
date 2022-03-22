@@ -1,8 +1,8 @@
 @php
     $transactionNav = [
-        'Topup'   => url('/transactions') . '?type=1', 
-        'Buying'  => url('/transactions') . '?type=2',
-        'Refund'  => url('/transactions') . '?type=3',
+        'Pending'   => url('/transactions') . '?type=1', 
+        'Paid'      => url('/transactions') . '?type=2',
+        'Failed'    => url('/transactions') . '?type=3',
     ];
 @endphp
 

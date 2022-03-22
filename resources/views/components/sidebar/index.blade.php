@@ -2,9 +2,9 @@
 
 <x-sidebar.sidebar theme="dark">
     <x-sidebar.brand 
-        img="{{ asset('assets/img/brand.png') }}"
-        {{-- icon="fa-store" --}}
-        name="REXENSOFT"
+        {{-- img="{{ asset('assets/img/brand.png') }}" --}}
+        icon="fa-store"
+        name="COOLPAY"
         route="/dashboard" />
   
     <x-sidebar.divider />

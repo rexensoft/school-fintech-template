@@ -41,8 +41,8 @@
                             <small>{{ $transaction->sender->email ?? '' }}</small>
                         </td>
                         <td class="align-middle">
-                            <h6 class="fw-bold m-0">{{ $transaction->receiver->name }}</h6>
-                            <small>{{ $transaction->receiver->email }}</small>
+                            <h6 class="fw-bold m-0">{{ $transaction->receiver->name ?? '-' }}</h6>
+                            <small>{{ $transaction->receiver->email ?? '' }}</small>
                         </td>
                         <td class="align-middle">{{ $transaction->amount }}</td>
                         <td class="align-middle">{{ $transaction->type_name }}</td>

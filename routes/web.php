@@ -59,6 +59,17 @@ Route::middleware('auth')->group(function() {
             });
         });
     });
+    
+    
+    /*
+        STUDENT ONLY
+    */
+    Route::middleware(['student'])->group(function() {
+        // TRANSACTION
+        Route::prefix('/stores')->name('stores.')->group(function() {
+            Route::get('/', [ItemController::class, 'index'])->name('index');
+        });
+    });
 
 
     /*
@@ -78,7 +89,13 @@ Route::middleware('auth')->group(function() {
     Route::middleware(['admin.student.teller'])->group(function() {
         // TRANSACTION
         Route::prefix('/transactions')->name('transactions.')->group(function() {
+            Route::get('/export', [TransactionController::class, 'export'])->name('export');
             Route::post('/topup', [TransactionController::class, 'topup'])->name('topup');
+        });
+
+        // USER
+        Route::prefix('/users')->name('users.')->group(function() {
+            Route::get('/export', [UserController::class, 'export'])->name('export');
         });
     });
 });

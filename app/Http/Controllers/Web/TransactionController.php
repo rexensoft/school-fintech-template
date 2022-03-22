@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Exports\TransactionExport;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
-use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class TransactionController extends Controller
@@ -55,6 +56,15 @@ class TransactionController extends Controller
             Transaction::fastReject($transactionId);
             Alert::success('Success', 'Topup rejected successfully');
             return back();
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
+            return back();
+        }
+    }
+
+    public function export() {
+        try{
+            return Excel::download(new TransactionExport, 'transactions.xlsx');
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
             return back();

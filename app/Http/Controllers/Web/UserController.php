@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
 use App\Models\{Role, User};
 use Exception;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
@@ -51,6 +53,16 @@ class UserController extends Controller
             User::fastDelete($userId);
             Alert::success('Success', 'User deleted successfully');
             return back();
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
+            return back();
+        }
+    }
+
+
+    public function export() {
+        try{
+            return Excel::download(new UserExport, 'users.xlsx');
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
             return back();

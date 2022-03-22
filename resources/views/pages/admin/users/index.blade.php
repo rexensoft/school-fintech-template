@@ -4,6 +4,7 @@
         <x-card.head>
             <x-text bold color="primary" value="Users" />
             <x-button.modal class="ms-3" target="modalAddUser" value="Add User"/>
+            <x-button outline class="ms-2" :action="route('users.export')" method="GET" value="Export" />
             <x-form method="GET" class="ms-auto d-none d-md-flex">
                 <x-input name="search" placeholder="Search..." value="{{ request()->search ?? '' }}" class="me-2"/>
                 <x-button outline type="submit" value="Search" />

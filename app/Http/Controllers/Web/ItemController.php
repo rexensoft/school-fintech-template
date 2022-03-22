@@ -11,9 +11,13 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ItemController extends Controller
 {
     public function index(Request $request) {
+        $role  = auth()->user()->role_id;
         $items = Item::fastPaginate($request);
 
-        return view('pages.seller.items.index', compact('items'));
+        if($role === 2)
+            return view('pages.seller.items.index', compact('items'));
+        if($role === 4)
+            return view('pages.student.stores.index', compact('items'));
     }
 
 
