@@ -17,7 +17,8 @@ class TransactionController extends Controller
         $role = auth()->user()->role_id;
         $trxs = new Transaction();
 
-        if($role === 2) $trxs = Transaction::where('type', 2); // Buying
+        if($role === 2) $trxs = Transaction::where('type', 2) // Buying
+            ->where('receiver_id', auth()->id());
         if($role === 3) $trxs = Transaction::where('type', 1); // Topup
         if($role === 4) $trxs = Transaction::where('sender_id', auth()->id())
             ->orWhere('receiver_id', auth()->id());

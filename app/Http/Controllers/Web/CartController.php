@@ -18,10 +18,10 @@ class CartController extends Controller
     }
 
 
-    public function destroy($itemId) {
+    public function store($itemId) {
         try{
-            Cart::fastDelete($itemId);
-            Alert::success('Success', 'Cart deleted successfully');
+            Cart::fastAdd($itemId);
+            Alert::success('Success', 'Added to cart successfully');
             return back();
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
@@ -30,9 +30,21 @@ class CartController extends Controller
     }
 
 
-    public function checkout(Request $request) {
+    public function destroy($itemId) {
         try{
-            Cart::fastCheckout($request);
+            Cart::fastDelete($itemId);
+            Alert::success('Success', 'Deleted from cart successfully');
+            return back();
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
+            return back();
+        }
+    }
+
+
+    public function checkout() {
+        try{
+            Cart::fastCheckout();
             Alert::success('Success', 'Checkout successfully');
             return back();
         }catch(Exception $err) {

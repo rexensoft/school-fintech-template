@@ -14,6 +14,11 @@ class Item extends Model
     protected $guarded  = ['id'];
 
 
+    public function seller() {
+        return $this->belongsTo(User::class);
+    }
+
+
     public function transactions() {
         return $this->belongsToMany(Transaction::class);
     }

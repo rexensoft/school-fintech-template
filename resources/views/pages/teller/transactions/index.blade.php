@@ -30,7 +30,8 @@
                         $page       = $transactions->currentPage();
                         $perPage    = $transactions->perPage();
                         $number     = $loop->iteration + $perPage * ($page-1);
-                        $isPending  = $transaction->status === 1;
+                        $status     = $transaction->status;
+                        $isPending  = $status === 1;
                         $isDisabled = $isPending ? '' : 'disabled';
                     @endphp
 
@@ -46,7 +47,14 @@
                         </td>
                         <td class="align-middle">{{ $transaction->amount }}</td>
                         <td class="align-middle">{{ $transaction->type_name }}</td>
-                        <td class="align-middle">{{ $transaction->status_name }}</td>
+                        <td class="align-middle">
+                            <h6 class="fw-bold m-0">{{ $transaction->status_name }}</h6>
+
+                            @if($status !== 1)
+                            <small>{{ $transaction->updated_at->format('d/m/Y') }}</small>
+                            @endif
+
+                        </td>
                         <td class="align-middle">
                             <h6 class="fw-bold m-0">{{ $transaction->created_at->format('d/m/Y') }}</h6>
                             <small>{{ $transaction->created_at->format('H:i:s') }}

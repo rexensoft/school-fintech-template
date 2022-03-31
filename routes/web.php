@@ -73,10 +73,18 @@ Route::middleware('auth')->group(function() {
         STUDENT ONLY
     */
     Route::middleware(['student'])->group(function() {
+        // CART
+        Route::prefix('/carts')->name('carts.')->group(function() {
+            Route::get('/', [CartController::class, 'index'])->name('index');
+            Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
+            Route::delete('/{itemId}', [CartController::class, 'destroy'])->name('destroy');
+        });
+        
         // TRANSACTION
         Route::prefix('/stores')->name('stores.')->group(function() {
             Route::get('/', [ItemController::class, 'index'])->name('index');
-            Route::post('/{item:id}/buy', [TransactionController::class, 'buy'])->name('buy');
+            Route::post('/{itemId}/add-cart', [CartController::class, 'store'])->name('store');
+            // Route::post('/{item:id}/buy', [TransactionController::class, 'buy'])->name('buy');
         });
     });
 

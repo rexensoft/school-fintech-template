@@ -30,7 +30,8 @@
                         $page       = $transactions->currentPage();
                         $perPage    = $transactions->perPage();
                         $number     = $loop->iteration + $perPage * ($page-1);
-                        $isPending  = $transaction->status === 1;
+                        $status     = $transaction->status;
+                        $isPending  = $status === 1;
                         $isDisabled = $isPending ? '' : 'disabled';
                     @endphp
 
@@ -38,12 +39,19 @@
                         <td class="align-middle">{{ $number }}</td>
                         <td class="align-middle">{{ $transaction->code }}</td>
                         <td class="align-middle">
-                            <h6 class="fw-bold m-0">{{ $transaction->receiver->name }}</h6>
-                            <small>{{ $transaction->receiver->email }}</small>
+                            <h6 class="fw-bold m-0">{{ $transaction->sender->name ?? '' }}</h6>
+                            <small>{{ $transaction->sender->email ?? '' }}</small>
                         </td>
-                        <td class="align-middle">{{ $transaction->items->first()->name ?? 'Unknown' }}</td>
+                        <td class="align-middle">{{ implode(', ', $transaction->items->map(fn($i) => $i->name)->toArray()) ?? 'Unknown' }}</td>
                         <td class="align-middle">{{ $transaction->amount }}</td>
-                        <td class="align-middle">{{ $transaction->status_name }}</td>
+                        <td class="align-middle">
+                            <h6 class="fw-bold m-0">{{ $transaction->status_name }}</h6>
+
+                            @if($status !== 1)
+                            <small>{{ $transaction->updated_at->format('d/m/Y') }}</small>
+                            @endif
+
+                        </td>
                         <td class="align-middle">
                             <h6 class="fw-bold m-0">{{ $transaction->created_at->format('d/m/Y') }}</h6>
                             <small>{{ $transaction->created_at->format('H:i:s') }}

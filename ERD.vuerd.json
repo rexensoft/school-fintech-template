@@ -3,9 +3,9 @@
     "version": "2.2.11",
     "width": 4000,
     "height": 4000,
-    "scrollTop": -339,
-    "scrollLeft": -658,
-    "zoomLevel": 0.9,
+    "scrollTop": -462,
+    "scrollLeft": -1101,
+    "zoomLevel": 1,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -258,7 +258,7 @@
           "active": false,
           "left": 706.9247,
           "top": 538.3892,
-          "zIndex": 2,
+          "zIndex": 5,
           "widthName": 60,
           "widthComment": 60
         },
@@ -504,7 +504,7 @@
           "active": false,
           "left": 1196.6938,
           "top": 210.1389,
-          "zIndex": 3,
+          "zIndex": 2,
           "widthName": 72.0908203125,
           "widthComment": 60
         },
@@ -668,6 +668,29 @@
               "widthDefault": 60
             },
             "id": "9aa48b10-6724-4109-aaba-004321346af2"
+          },
+          {
+            "name": "seller_id",
+            "comment": "",
+            "dataType": "BIGINT(20)",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 68.45361328125,
+              "widthDefault": 60
+            },
+            "id": "3dbf2693-d443-4d5c-9681-7b691c5d0617"
           },
           {
             "name": "name",
@@ -856,8 +879,8 @@
         ],
         "ui": {
           "active": false,
-          "left": 1197.0002,
-          "top": 845.0273,
+          "left": 1198.0002,
+          "top": 844.0273,
           "zIndex": 6,
           "widthName": 60,
           "widthComment": 60
@@ -989,7 +1012,7 @@
           "active": false,
           "left": 1687.3054,
           "top": 567.6942,
-          "zIndex": 5,
+          "zIndex": 4,
           "widthName": 97.3798828125,
           "widthComment": 60
         },
@@ -1120,7 +1143,7 @@
           "active": false,
           "left": 1196,
           "top": 573.6942,
-          "zIndex": 4,
+          "zIndex": 3,
           "widthName": 60,
           "widthComment": 60
         },
@@ -1145,7 +1168,7 @@
             "3327bfed-c622-476f-b0fb-3a6df56eb43d"
           ],
           "x": 1095.93690703125,
-          "y": 665.1392,
+          "y": 696.8267,
           "direction": "right"
         },
         "end": {
@@ -1171,7 +1194,7 @@
             "3327bfed-c622-476f-b0fb-3a6df56eb43d"
           ],
           "x": 1095.93690703125,
-          "y": 749.6392,
+          "y": 760.2017,
           "direction": "right"
         },
         "end": {
@@ -1248,8 +1271,8 @@
           "columnIds": [
             "9aa48b10-6724-4109-aaba-004321346af2"
           ],
-          "x": 1586.01240703125,
-          "y": 971.7773,
+          "x": 1587.01240703125,
+          "y": 981.0273,
           "direction": "right"
         },
         "end": {
@@ -1274,8 +1297,8 @@
           "columnIds": [
             "9aa48b10-6724-4109-aaba-004321346af2"
           ],
-          "x": 1391.506303515625,
-          "y": 845.0273,
+          "x": 1392.506303515625,
+          "y": 844.0273,
           "direction": "top"
         },
         "end": {
@@ -1301,7 +1324,7 @@
             "3327bfed-c622-476f-b0fb-3a6df56eb43d"
           ],
           "x": 1095.93690703125,
-          "y": 580.6392,
+          "y": 570.0767,
           "direction": "right"
         },
         "end": {
@@ -1316,6 +1339,32 @@
         "constraintName": "fk_users_to_carts",
         "visible": true,
         "id": "c9f4ad00-7458-4462-8cb9-db6981126321"
+      },
+      {
+        "identification": false,
+        "relationshipType": "OneN",
+        "startRelationshipType": "Dash",
+        "start": {
+          "tableId": "f53de608-4614-4ef6-a04c-97f72f1bdc3b",
+          "columnIds": [
+            "3327bfed-c622-476f-b0fb-3a6df56eb43d"
+          ],
+          "x": 1095.93690703125,
+          "y": 633.4517,
+          "direction": "right"
+        },
+        "end": {
+          "tableId": "19e98611-d68e-460d-a7a3-1931f19ce63e",
+          "columnIds": [
+            "3dbf2693-d443-4d5c-9681-7b691c5d0617"
+          ],
+          "x": 1198.0002,
+          "y": 981.0273,
+          "direction": "left"
+        },
+        "constraintName": "fk_users_to_items",
+        "visible": true,
+        "id": "3d37e0c5-ef90-4298-9509-540d6988da6e"
       }
     ]
   }

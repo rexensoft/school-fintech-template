@@ -2,7 +2,7 @@
 
 namespace App\Traits\Models\Item;
 
-use App\Models\Item;
+use App\Models\{Item, User};
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\Models\Searchable;
@@ -23,8 +23,10 @@ trait Fastable{
     }
     
 
-    public function scopeFastCreate($query, $data) {
+    public function scopeFastCreate($query, $data, $user=null) {
         $data       = (object) $data;
+        $userId     = $user->id ?? null;
+        $user       = isset($user) ? User::find($userId ?? $user) : auth()->user();
         $validator  = Validator::make($data->all() ?? $data, [
             'name'  => 'required|min:2|max:50',
             'stock' => 'nullable|numeric|digits_between:1,18',
@@ -38,10 +40,11 @@ trait Fastable{
         }
 
         $item = Item::create([
-            'name'  => $data->name,
-            'stock' => $data->stock,
-            'price' => $data->price,
-            'desc'  => $data->desc,
+            'seller_id' => $user->id,
+            'name'      => $data->name,
+            'stock'     => $data->stock,
+            'price'     => $data->price,
+            'desc'      => $data->desc,
         ]);
 
         return $item;
@@ -60,6 +63,7 @@ trait Fastable{
         ]);
         
         if(!$item) throw new Exception('Item not found');
+        if($item->seller_id !== auth()->id()) throw new Exception('Forbidden');
         if($validator->fails()) {
             $error = $validator->errors()->first();
             throw new Exception($error);
@@ -81,6 +85,7 @@ trait Fastable{
         $item   = Item::find($itemId ?? $item);
 
         if(!$item) throw new Exception('Item not found');
+        if($item->seller_id !== auth()->id()) throw new Exception('Forbidden');
 
         $item->delete();
 

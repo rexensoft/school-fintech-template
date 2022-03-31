@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('seller_id')->constrained('users');
             $table->string('name', 100);
             $table->string('desc')->nullable();
             $table->bigInteger('stock')->default(0);

@@ -32,24 +32,38 @@ trait Fastable{
         return $transactions;
     }
 
+
+    public function scopeFastCreate($query, $data) {
+        $data       = gettype($data) === 'object' ? $data->all() ?? $data : $data;
+        $validator  = Validator::make($data, [
+            'sender_id'     => 'nullable|exists:users,id',
+            'receiver_id'   => 'required|exists:users,id',
+            'amount'        => 'required|numeric|digits_between:1,18',
+            'type'          => 'required|numeric|min:1',
+            'status'        => 'nullable|numeric|min:1'
+        ]);
+
+        if($validator->fails()) {
+            $error = $validator->errors()->first();
+            throw new Exception($error);
+        }
+
+        $transaction = Transaction::create($data);
+
+        return $transaction;
+    }
+
     
     public function scopeFastTopup($query, $data, $user=null) {
         $data       = (object) $data;
         $sending    = $user ? true : false;
         $userId     = $user->id ?? null;
         $user       = isset($user) ? User::find($userId ?? $user) : auth()->user();
-        $validator  = Validator::make($data->all() ?? $data, [
-            'amount'  => 'required|numeric|digits_between:1,18',
-        ]);
 
         if(!$user) throw new Exception('User not found');
-        if($validator->fails()) {
-            $error = $validator->errors()->first();
-            throw new Exception($error);
-        }
 
-        $transaction = Transaction::create([
-            'receiver_id'   => $user->id,
+        $transaction = Transaction::fastCreate([
+            'receiver_id'   => $user->id ?? null,
             'amount'        => $data->amount,
             'type'          => 1,
             'status'        => $sending ? 3 : 1,
@@ -61,6 +75,40 @@ trait Fastable{
         
         return $transaction;
     }
+
+    
+    public function scopeFastBuy($query, $data, $items, $user=null) {
+        $data       = (object) $data;
+        $sending    = $user ? true : false;
+        $userId     = $user->id ?? null;
+        $user       = isset($user) ? User::find($userId ?? $user) : auth()->user();
+        $items      = collect($items);
+
+        if(!$user) throw new Exception('User not found');
+        if(!($data->amount ?? null)) throw new Exception('Data not valid');
+        if($user->balance < $data->amount) throw new Exception('Balance not enough');
+
+        $items->groupBy('seller_id')->each(function($item, $key) use($sending, $user) {
+            $transaction = Transaction::fastCreate([
+                'sender_id'     => $user->id ?? null,
+                'receiver_id'   => $key,
+                'amount'        => $item->sum('price'),
+                'type'          => 2,
+                'status'        => $sending ? 3 : 1,
+            ]);
+            
+            ItemTransaction::insert($item->map(fn($item) => ([
+                'transaction_id'    => $transaction->id,
+                'item_id'           => $item->id,
+            ]))->toArray());
+        });
+
+        $user->update([
+            'balance' => $user->balance - $data->amount, 
+        ]);
+        
+        return true;
+    }
     
     
     public function scopeFastApprove($query, $transaction) {
@@ -68,7 +116,7 @@ trait Fastable{
         $transaction   = Transaction::with(['receiver'])
             ->find($transactionId ?? $transaction);
 
-        if(!$transaction) throw new Exception('User not found');
+        if(!$transaction) throw new Exception('Transaction not found');
         if($transaction->type !== 1) throw new Exception('Invalid transaction');
         if($transaction->status !== 1) throw new Exception('Already responded');
 
@@ -90,7 +138,7 @@ trait Fastable{
         $transaction   = Transaction::with(['receiver'])
             ->find($transactionId ?? $transaction);
 
-        if(!$transaction) throw new Exception('User not found');
+        if(!$transaction) throw new Exception('Transaction not found');
         if($transaction->type !== 1) throw new Exception('Invalid transaction');
         if($transaction->status !== 1) throw new Exception('Already responded');
 
@@ -98,38 +146,6 @@ trait Fastable{
             'status' => 4, // Failed
         ]);
 
-        return $transaction;
-    }
-
-
-    public function scopeFastBuy($query, $item, $user=null) {
-        $userId     = $user->id ?? null;
-        $user       = isset($user) ? User::find($userId ?? $user) : auth()->user();
-        $itemId     = $item->id ?? null;
-        $item       = Item::find($itemId ?? $item);
-        $seller     = User::where('role_id', 2)->first();
-
-        if(!$item) throw new Exception('Item not found');
-        if(!$user) throw new Exception('User not found');
-        if($user->balance < $item->price) throw new Exception('Balance not enough');
-
-        $transaction = Transaction::create([
-            'sender_id'     => $user->id,
-            'receiver_id'   => $seller->id,
-            'amount'        => $item->price * 1,
-            'type'          => 2,
-            'status'        => 1,
-        ]);
-
-        ItemTransaction::create([
-            'transaction_id'    => $transaction->id,
-            'item_id'           => $item->id,
-        ]);
-
-        $user->update([
-            'balance' => $user->balance - $transaction->amount,
-        ]);
-        
         return $transaction;
     }
 
@@ -142,11 +158,6 @@ trait Fastable{
         if(!$transaction) throw new Exception('User not found');
         if($transaction->type !== 2) throw new Exception('Invalid transaction');
         if($transaction->status !== 1) throw new Exception('Already responded');
-
-        $receiver = $transaction->receiver;
-        $receiver->update([
-            'balance' => $receiver->balance + $transaction->amount
-        ]);
 
         $seller = $transaction->receiver;
         $seller->update([

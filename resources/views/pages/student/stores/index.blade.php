@@ -13,11 +13,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Stock</th>
-                        <th>Price</th>
-                        <th>Desc</th>
+                        <th>Product</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -31,20 +27,20 @@
                     @endphp
 
                     <tr>
-                        <td class="align-middle">{{ $number }}</td>
-                        <td class="align-middle">{{ $item->name }}</td>
-                        <td class="align-middle">{{ number_format($item->stock) }}</td>
-                        <td class="align-middle">{{ number_format($item->price) }}</td>
                         <td class="align-middle">
-                            <textarea
-                                class="form-control"
-                                readonly
-                                >{{ $item->desc }}</textarea>
+                            <h6 class="fw-bold m-0">{{ $item->name }}</h6>
+                            <small>
+                                Stock: {{ number_format($item->stock) }} 
+                                {{'@'. number_format($item->price) }}
+                            </small>
                         </td>
                         <td class="align-middle">
                             <x-view>
-                                <x-button color="success" :action="route('stores.buy', [$item->id])">
-                                    <i class="fas fa-shopping-cart"></i> Buy
+                                <x-button outline>
+                                    <i class="fas fa-eye"></i>
+                                </x-button>
+                                <x-button :action="route('stores.store', [$item->id])" class="ms-2">
+                                    <i class="fas fa-cart-plus"></i>
                                 </x-button>
                             </x-view>
                         </td>
