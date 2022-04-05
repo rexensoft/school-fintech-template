@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Helpers\RandomHelper;
 use App\Traits\Models\Transaction\Fastable;
 use App\Traits\Models\Searchable;
+use App\Traits\Todayable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    use Fastable, HasFactory, Searchable;
+    use Fastable, HasFactory, Searchable, Todayable;
 
     protected $appends   = ['status_name', 'type_name'];
 
@@ -22,13 +23,15 @@ class Transaction extends Model
         2 => 'Paid',
         3 => 'Success',
         4 => 'Failed',
-        5 => 'Expired'
+        5 => 'Canceled',
+        6 => 'Expired'
     ];
 
     public $type_names   = [
         1 => 'Topup',
         2 => 'Buying',
-        3 => 'Refund',
+        3 => 'Withdraw',
+        4 => 'Refund',
     ];
 
 

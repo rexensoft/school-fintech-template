@@ -7,6 +7,12 @@
     ];
 @endphp
 
+<x-sidebar.item
+    active="{{ Request::is('dashboard') }}"
+    icon="fa-gauge-high"
+    name="Dashboard" 
+    :route="url('/dashboard')" />
+
 <x-sidebar.collapse-item
     active="{{ Request::is('transactions') }}"
     icon="fa-clipboard-list"

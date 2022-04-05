@@ -8,12 +8,6 @@
         route="/dashboard" />
   
     <x-sidebar.divider />
-  
-    <x-sidebar.item
-        active="{{ Request::is('dashboard') }}"
-        icon="fa-gauge-high"
-        name="Dashboard" 
-        :route="url('/dashboard')" />
 
     @if($role === 1) <x-sidebar.role.admin />
     @elseif($role === 2) <x-sidebar.role.seller />

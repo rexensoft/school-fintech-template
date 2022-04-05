@@ -1,11 +1,22 @@
 @php
+    $dashboardNav   = [
+        'All'   => url('/dashboard'),
+        'Today' => url('/dashboard') . '?today=true',
+    ];
+
     $transactionNav = [
-        'All'   => url('/transactions'), 
-        'Topup'   => url('/transactions') . '?type=1', 
-        'Buying'  => url('/transactions') . '?type=2',
-        'Refund'  => url('/transactions') . '?type=3',
+        'All'       => url('/transactions'), 
+        'Topup'     => url('/transactions') . '?type=1', 
+        'Buying'    => url('/transactions') . '?type=2',
+        'Refund'    => url('/transactions') . '?type=3',
     ];
 @endphp
+
+<x-sidebar.collapse-item
+    active="{{ Request::is('dashboard') }}"
+    icon="fa-gauge-high"
+    name="Dashboard" 
+    :routes="$dashboardNav" />
 
 <x-sidebar.collapse-item
     active="{{ Request::is('transactions') }}"

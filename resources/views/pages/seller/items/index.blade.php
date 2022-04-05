@@ -3,7 +3,7 @@
     <x-card class="mb-4">
         <x-card.head>
             <x-text bold color="primary" value="Items" />
-            <x-button.modal class="ms-3" target="modalAddItem" value="Add Item"/>
+            <x-button.modal class="ms-3" target="modalAddItem" title="Add Item"><i class="fa-solid fa-plus"></i></x-button.modal>
             <x-form method="GET" class="ms-auto d-none d-md-flex">
                 <x-input name="search" placeholder="Search..." value="{{ request()->search ?? '' }}" class="me-2"/>
                 <x-button outline type="submit" value="Search" />

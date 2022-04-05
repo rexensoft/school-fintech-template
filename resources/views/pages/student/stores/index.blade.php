@@ -10,6 +10,20 @@
         </x-card.head>
         <x-card.body class="table-responsive" style="min-height: 400px">
 
+             <!-- MODAL SHOW PRODUCT -->
+             <x-modal id="modalShowProduct" title=" " :action="route('users.import')">
+                <x-modal.body>
+                    <div class="mb-1">Price: <span id="productPrice"></span></div>
+                    <div class="mb-1">Stock: <span id="productStock"></span></div>
+                    <div class="mb-3">Seller: <span id="productSeller"></span></div>
+                    <x-input.label>Description:</x-input.label>
+                    <textarea id="productDesc"  class="form-control" style="height: 100px" readonly></textarea>
+                </x-modal.body>
+                <x-modal.foot>
+                    <x-button outline color="secondary" data-bs-dismiss="modal" value="Close" />
+                </x-modal.foot>
+            </x-modal>
+
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -36,7 +50,7 @@
                         </td>
                         <td class="align-middle">
                             <x-view>
-                                <x-button outline>
+                                <x-button outline :data="$item" data-bs-toggle="modal" data-bs-target="#modalShowProduct">
                                     <i class="fas fa-eye"></i>
                                 </x-button>
                                 <x-button :action="route('stores.store', [$item->id])" class="ms-2">
@@ -53,4 +67,33 @@
             {{ $items->links() }}
         </x-card.body>
     </x-card>
+
+    <x-layout.section scripts>
+        <script>
+            const onClickHandler = (data, action=null) => {
+                const modal   = document.querySelector(`#modalShowProduct`);
+                const form    = modal.querySelector('.modal-content form');
+                const elmnts  = {
+                    title : modal.querySelector('.modal-title'),
+                    price : form.querySelector('#productPrice'),
+                    stock : form.querySelector('#productStock'),
+                    seller: form.querySelector('#productSeller'),
+                    desc  : form.querySelector('#productDesc'),
+                };
+
+                elmnts.title.innerText  = data.name;
+                elmnts.price.innerText  = Intl.NumberFormat('en-EN').format(data.price);
+                elmnts.stock.innerText  = Intl.NumberFormat('en-EN').format(data.stock);
+                elmnts.seller.innerText = data.seller.name;
+                elmnts.desc.value = data.desc;
+            }
+
+            document.querySelectorAll('*[data-bs-target="#modalShowProduct"]')
+            .forEach(button => button.addEventListener('click', () => {
+                const data = JSON.parse(button.getAttribute('data'));
+                console.log(data);
+                onClickHandler(data);
+            }))
+        </script>
+    </x-layout.section>
 </x-layout>

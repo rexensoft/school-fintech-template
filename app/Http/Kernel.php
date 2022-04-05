@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'seller' => \App\Http\Middleware\Web\IsSeller::class,
+        'seller.student' => \App\Http\Middleware\Web\IsSellerStudent::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'student' => \App\Http\Middleware\Web\IsStudent::class,
         'teller' => \App\Http\Middleware\Web\IsTeller::class,

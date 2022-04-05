@@ -3,20 +3,23 @@
 namespace App\Exports;
 
 use App\Models\User;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\ToArray;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\{FromView, RegistersEventListeners, ShouldAutoSize, WithEvents};
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class UserExport implements FromCollection
+
+class UserExport implements FromView, ShouldAutoSize, WithEvents
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
-    {
-        $header = ['ID', 'Role ID', 'Name', 'Balance', 'Email', 'Created At', 'Updated At'];
-        $users  = User::select('id', 'role_id', 'name', 'name', 'balance', 'email', 'created_at', 'updated_at')->get();
-        $users->splice(0, 0, [$header]);
+    use RegistersEventListeners;
 
-        return $users;
+    public function view() :View {
+        $users = User::with(['role'])->get();
+
+        return view('exports.users', compact('users'));
+    }
+
+
+    static public function afterSheet(AfterSheet $event) {
+        $event->sheet->getDelegate()->freezePane('A2');
     }
 }

@@ -63,6 +63,7 @@ trait Fastable{
         if(!$user) throw new Exception('User not found');
 
         $transaction = Transaction::fastCreate([
+            'sender_id'     => $sending ? auth()->id() : null,
             'receiver_id'   => $user->id ?? null,
             'amount'        => $data->amount,
             'type'          => 1,
@@ -97,6 +98,15 @@ trait Fastable{
                 'status'        => $sending ? 3 : 1,
             ]);
             
+            $item->groupBy('id')->each(function($item, $key) {
+                $count = $item->count();
+                $item  = Item::find($key);
+
+                $item->update([
+                    'stock' => $item->stock - $count,
+                ]);
+            });
+            
             ItemTransaction::insert($item->map(fn($item) => ([
                 'transaction_id'    => $transaction->id,
                 'item_id'           => $item->id,
@@ -111,13 +121,13 @@ trait Fastable{
     }
     
     
-    public function scopeFastApprove($query, $transaction) {
+    public function scopeFastApproveTopup($query, $transaction) {
         $transactionId = $transaction->id ?? null;
         $transaction   = Transaction::with(['receiver'])
+            ->where('type', 1)
             ->find($transactionId ?? $transaction);
 
         if(!$transaction) throw new Exception('Transaction not found');
-        if($transaction->type !== 1) throw new Exception('Invalid transaction');
         if($transaction->status !== 1) throw new Exception('Already responded');
 
         $receiver = $transaction->receiver;
@@ -133,17 +143,35 @@ trait Fastable{
     }
     
     
-    public function scopeFastReject($query, $transaction) {
+    public function scopeFastRejectTopup($query, $transaction) {
         $transactionId = $transaction->id ?? null;
         $transaction   = Transaction::with(['receiver'])
+            ->where('type', 1)
             ->find($transactionId ?? $transaction);
 
         if(!$transaction) throw new Exception('Transaction not found');
-        if($transaction->type !== 1) throw new Exception('Invalid transaction');
         if($transaction->status !== 1) throw new Exception('Already responded');
 
         $transaction = $transaction->update([
             'status' => 4, // Failed
+        ]);
+
+        return $transaction;
+    }
+    
+    
+    public function scopeFastCancelTopup($query, $transaction) {
+        $user          = auth()->user();
+        $transactionId = $transaction->id ?? null;
+        $transaction   = Transaction::with(['receiver'])
+            ->where('type', 1)->where('receiver_id', $user->id)
+            ->find($transactionId ?? $transaction);
+
+        if(!$transaction) throw new Exception('Transaction not found');
+        if($transaction->status !== 1) throw new Exception('Already responded');
+
+        $transaction = $transaction->update([
+            'status' => 5, // Canceled
         ]);
 
         return $transaction;
@@ -153,10 +181,10 @@ trait Fastable{
     public function scopeFastApproveBuy($query, $transaction) {
         $transactionId = $transaction->id ?? null;
         $transaction   = Transaction::with(['receiver'])
+            ->where('type', 2)
             ->find($transactionId ?? $transaction);
 
-        if(!$transaction) throw new Exception('User not found');
-        if($transaction->type !== 2) throw new Exception('Invalid transaction');
+        if(!$transaction) throw new Exception('Transaction not found');
         if($transaction->status !== 1) throw new Exception('Already responded');
 
         $seller = $transaction->receiver;
@@ -174,12 +202,21 @@ trait Fastable{
     
     public function scopeFastRejectBuy($query, $transaction) {
         $transactionId = $transaction->id ?? null;
-        $transaction   = Transaction::with(['receiver'])
+        $transaction   = Transaction::with(['items', 'receiver'])
+            ->where('type', 2)
             ->find($transactionId ?? $transaction);
 
-        if(!$transaction) throw new Exception('User not found');
-        if($transaction->type !== 2) throw new Exception('Invalid transaction');
+        if(!$transaction) throw new Exception('Transaction not found');
         if($transaction->status !== 1) throw new Exception('Already responded');
+
+        $transaction->items->groupBy('id')->each(function($item, $key) {
+            $count = $item->count();
+            $item  = Item::find($key);
+
+            $item->update([
+                'stock' => $item->stock + $count,
+            ]);
+        });
 
         $user = $transaction->sender;
         $user->update([
@@ -188,6 +225,126 @@ trait Fastable{
 
         $transaction = $transaction->update([
             'status' => 4, // Failed
+        ]);
+
+        return $transaction;
+    }
+
+
+    public function scopeFastCancelBuy($query, $transaction) {
+        $user          = auth()->user();
+        $transactionId = $transaction->id ?? null;
+        $transaction   = Transaction::with(['items', 'receiver'])
+            ->where('type', 2)->where('sender_id', $user->id)
+            ->find($transactionId ?? $transaction);
+
+        if(!$transaction) throw new Exception('Transaction not found');
+        if($transaction->status !== 1) throw new Exception('Already responded');
+
+        $transaction->items->groupBy('id')->each(function($item, $key) {
+            $count = $item->count();
+            $item  = Item::find($key);
+
+            $item->update([
+                'stock' => $item->stock + $count,
+            ]);
+        });
+
+        $user = $transaction->sender;
+        $user->update([
+            'balance' => $user->balance + $transaction->amount,
+        ]);
+
+        $transaction = $transaction->update([
+            'status' => 5, // Canceled
+        ]);
+
+        return $transaction;
+    }
+
+
+    public function scopeFastWithdraw($query, $data, $user=null) {
+        $data       = (object) $data;
+        $sending    = $user ? true : false;
+        $userId     = $user->id ?? null;
+        $user       = isset($user) ? User::find($userId ?? $user) : auth()->user();
+
+        if(!$user) throw new Exception('User not found');
+        if(!($data->amount ?? null)) throw new Exception('Data not valid');
+        if($user->balance < $data->amount) throw new Exception('Balance not enough');
+
+        $transaction = Transaction::fastCreate([
+            'sender_id'     => $sending ? auth()->id() : null,
+            'receiver_id'   => $user->id ?? null,
+            'amount'        => $data->amount,
+            'type'          => 3,
+            'status'        => $sending ? 3 : 1,
+        ]);
+        
+        $user->update([
+            'balance' => $user->balance - $transaction->amount,
+        ]);
+        
+        return $transaction;
+    }
+
+
+    public function scopeFastApproveWithdraw($query, $transaction) {
+        $transactionId = $transaction->id ?? null;
+        $transaction   = Transaction::with(['receiver'])
+            ->where('type', 3)
+            ->find($transactionId ?? $transaction);
+
+        if(!$transaction) throw new Exception('Transaction not found');
+        if($transaction->status !== 1) throw new Exception('Already responded');
+
+        $transaction = $transaction->update([
+            'status' => 2, // Paid
+        ]);
+
+        return $transaction;
+    }
+    
+    
+    public function scopeFastRejectWithdraw($query, $transaction) {
+        $transactionId = $transaction->id ?? null;
+        $transaction   = Transaction::with(['receiver'])
+            ->where('type', 3)
+            ->find($transactionId ?? $transaction);
+
+        if(!$transaction) throw new Exception('Transaction not found');
+        if($transaction->status !== 1) throw new Exception('Already responded');
+
+        $receiver = $transaction->receiver;
+        $receiver->update([
+            'balance' => $receiver->balance + $transaction->amount
+        ]);
+
+        $transaction = $transaction->update([
+            'status' => 4, // Failed
+        ]);
+
+        return $transaction;
+    }
+   
+   
+    public function scopeFastCancelWithdraw($query, $transaction) {
+        $user          = auth()->user();
+        $transactionId = $transaction->id ?? null;
+        $transaction   = Transaction::with(['receiver'])
+            ->where('type', 3)->where('receiver_id', $user->id)
+            ->find($transactionId ?? $transaction);
+
+        if(!$transaction) throw new Exception('Transaction not found');
+        if($transaction->status !== 1) throw new Exception('Already responded');
+
+        $receiver = $transaction->receiver;
+        $receiver->update([
+            'balance' => $receiver->balance + $transaction->amount
+        ]);
+
+        $transaction = $transaction->update([
+            'status' => 5, // Canceled
         ]);
 
         return $transaction;

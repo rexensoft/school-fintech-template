@@ -3,8 +3,8 @@
     <x-card class="mb-4">
         <x-card.head>
             <x-text bold color="primary" value="Transactions" />
-            <x-button.modal class="ms-3" target="modalTopup" value="Topup"/>
-            <x-button outline class="ms-2" :action="route('transactions.export')" method="GET" value="Export" />
+            <x-button.modal class="ms-3" target="modalTopup" title="Topup"><i class="fa-solid fa-circle-dollar-to-slot"></i></x-button.modal>
+            <x-button outline class="ms-2" :action="route('transactions.export')" method="GET" title="Export"><i class="fas fa-file-export"></i></x-button>
             <x-form method="GET" class="ms-auto d-none d-md-flex">
                 <x-input name="search" placeholder="Search..." value="{{ request()->search ?? '' }}" class="me-2"/>
                 <x-button outline type="submit" value="Search" />
@@ -54,7 +54,7 @@
                             <h6 class="fw-bold m-0">{{ $transaction->receiver->name ?? '-' }}</h6>
                             <small>{{ $transaction->receiver->email ?? '' }}</small>
                         </td>
-                        <td class="align-middle">{{ $transaction->amount }}</td>
+                        <td class="align-middle">{{ number_format($transaction->amount) }}</td>
                         <td class="align-middle">{{ $transaction->type_name }}</td>
                         <td class="align-middle">
                             <h6 class="fw-bold m-0">{{ $transaction->status_name }}</h6>

@@ -3,8 +3,9 @@
     <x-card class="mb-4">
         <x-card.head>
             <x-text bold color="primary" value="Users" />
-            <x-button.modal class="ms-3" target="modalAddUser" value="Add User"/>
-            <x-button outline class="ms-2" :action="route('users.export')" method="GET" value="Export" />
+            <x-button.modal class="ms-3" target="modalAddUser"><i class="fas fa-user-plus"></i></x-button.modal>
+            <x-button.modal outline class="ms-2" target="modalImportUser" title="Import"><i class="fas fa-file-import"></i></x-button.modal>
+            <x-button outline class="ms-2" :action="route('users.export')" method="GET" title="Export"><i class="fa-solid fa-file-export"></i></x-button>
             <x-form method="GET" class="ms-auto d-none d-md-flex">
                 <x-input name="search" placeholder="Search..." value="{{ request()->search ?? '' }}" class="me-2"/>
                 <x-button outline type="submit" value="Search" />
@@ -12,6 +13,13 @@
         </x-card.head>
         <x-card.body class="table-responsive" style="min-height: 400px">
             
+            <!-- MODAL IMPORT USER -->
+            <x-modal id="modalImportUser" title="Import User" :action="route('users.import')">
+                <x-modal.body>
+                    <x-input type="file" name="file" class="mb-3" accept=".xlsx"/>
+                </x-modal.body>
+            </x-modal>
+
             <!-- MODAL ADD USER -->
             <x-modal id="modalAddUser" title="Add User" :action="route('users.store')">
                 <x-modal.body>

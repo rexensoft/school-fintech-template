@@ -17,6 +17,7 @@ Route::middleware('auth')->group(function() {
     // TRANSACTION
     Route::prefix('/transactions')->name('transactions.')->group(function() {
         Route::get('/', [TransactionController::class, 'index'])->name('index');
+        Route::post('/withdraw', [TransactionController::class, 'withdraw'])->name('withdraw');
     });
 
     
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function() {
         // USER
         Route::prefix('/users')->name('users.')->group(function() {
             Route::post('/', [UserController::class, 'store'])->name('store');
+            Route::post('/import', [UserController::class, 'import'])->name('import');
             Route::put('/{userId}', [UserController::class, 'update'])->name('update');
             Route::delete('/{userId}', [UserController::class, 'destroy'])->name('destroy');
         });
@@ -80,22 +82,22 @@ Route::middleware('auth')->group(function() {
             Route::delete('/{itemId}', [CartController::class, 'destroy'])->name('destroy');
         });
         
-        // TRANSACTION
+        // STORE
         Route::prefix('/stores')->name('stores.')->group(function() {
             Route::get('/', [ItemController::class, 'index'])->name('index');
             Route::post('/{itemId}/add-cart', [CartController::class, 'store'])->name('store');
-            // Route::post('/{item:id}/buy', [TransactionController::class, 'buy'])->name('buy');
         });
     });
 
 
     /*
-        ADMIN, STUDENT, TELLER ONLY
+        ADMIN, TELLER ONLY
     */
     Route::middleware(['admin.teller'])->group(function() {
         // USER
         Route::prefix('/users')->name('users.')->group(function() {
             Route::get('/', [UserController::class, 'index'])->name('index');
+            Route::get('/export', [UserController::class, 'export'])->name('export');
          });
     });
 
@@ -109,10 +111,16 @@ Route::middleware('auth')->group(function() {
             Route::get('/export', [TransactionController::class, 'export'])->name('export');
             Route::post('/topup', [TransactionController::class, 'topup'])->name('topup');
         });
+    });
 
-        // USER
-        Route::prefix('/users')->name('users.')->group(function() {
-            Route::get('/export', [UserController::class, 'export'])->name('export');
+
+    /*
+        SELLER, STUDENT ONLY
+    */
+    Route::middleware(['seller.student'])->group(function() {
+        // TRANSACTION
+        Route::prefix('/transactions')->name('transactions.')->group(function() {
+            Route::post('/{transactionId}/cancel', [TransactionController::class, 'cancel'])->name('cancel');
         });
     });
 });

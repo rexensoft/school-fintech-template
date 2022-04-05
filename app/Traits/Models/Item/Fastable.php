@@ -11,7 +11,7 @@ trait Fastable{
     public function scopeFastPaginate($query, $data=[]) {
         $data   = (object) $data;
         $search = $data->search ?? null; 
-        $items  = $query->latest();
+        $items  = $query->with(['seller'])->latest();
 
         if($search) $items = $items->search($search);
 

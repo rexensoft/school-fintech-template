@@ -3,20 +3,25 @@
 namespace App\Exports;
 
 use App\Models\Transaction;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\ToArray;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\{FromCollection, FromView, ShouldAutoSize, WithEvents};
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class TransactionExport implements FromCollection
+class TransactionExport implements FromView, ShouldAutoSize, WithEvents
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
-    {
-        $header         = ['ID', 'Sender ID', 'Receiver ID', 'Code', 'Amount', 'Created At', 'Updated At', 'Status', 'Type'];
-        $transactions   = Transaction::all()->makeHidden(['detail', 'status', 'type']);
-        $transactions->splice(0, 0, [$header]);
+    public function view() :View {
+        $transactions = Transaction::with(['sender', 'receiver'])
+            ->get();
 
-        return $transactions;
+        return view('exports.transactions', compact('transactions'));
+    }
+
+
+    public function registerEvents() :array {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $event->sheet->getDelegate()->freezePane('A3');
+            },
+        ];
     }
 }

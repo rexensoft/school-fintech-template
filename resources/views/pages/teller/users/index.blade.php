@@ -3,7 +3,7 @@
     <x-card class="mb-4">
         <x-card.head>
             <x-text bold color="primary" value="Users" />
-            <x-button class="ms-2" :action="route('users.export')" method="GET" value="Export" />
+            <x-button outline class="ms-2" :action="route('users.export')" method="GET" title="Export"><i class="fas fa-file-export"></i></x-button>
             <x-form method="GET" class="ms-auto d-none d-md-flex">
                 <x-input name="search" placeholder="Search..." value="{{ request()->search ?? '' }}" class="me-2"/>
                 <x-button outline type="submit" value="Search" />

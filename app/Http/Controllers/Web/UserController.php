@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
+use App\Imports\UserImport;
 use App\Models\{Role, User};
 use Exception;
 use Illuminate\Http\Request;
@@ -62,7 +63,27 @@ class UserController extends Controller
 
     public function export() {
         try{
-            return Excel::download(new UserExport, 'users.xlsx');
+            $filename = 'users_' . now()->format('ymdHis') . '.xlsx';
+            return Excel::download(new UserExport, $filename);
+        }catch(Exception $err) {
+            Alert::error('Failed', $err->getMessage());
+            return back();
+        }
+    }
+    
+    
+    public function import(Request $request) {
+        try{
+            $this->validate($request, [
+                'file'  => 'required|file|mimes:xlsx',
+            ]);
+
+            $file       = $request->file('file');
+            $extension  = $file->getClientOriginalExtension();
+            $filename   = "users-import.$extension";
+            $file       = $file->storeAs('temp', $filename);
+            Excel::import(new UserImport, $file);
+            return back();
         }catch(Exception $err) {
             Alert::error('Failed', $err->getMessage());
             return back();
